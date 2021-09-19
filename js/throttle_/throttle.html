@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>节流</title>
+</head>
+
+<body>
+  <div style="height: 1000vh;">
+
+  </div>
+</body>
+<script>
+
+  /**
+   * 节流
+   * 高频时间触发,但n秒内只会执行一次,所以节流会稀释函数的执行频率。
+   * 时间戳，首次立即执行
+   * @param {Function} fn 
+   * @param {number} delay 
+   */
+  // function throttle(fn, delay) {
+  //   let start = 0;
+  //   return function () {
+  //     const now = Date.now();
+  //     if ((now - start) >= delay) {
+  //       start = now;
+  //       fn.apply(this, arguments);
+  //     }
+  //   }
+  // }
+
+  /**
+   * 节流
+   * 高频时间触发,但n秒内只会执行一次,所以节流会稀释函数的执行频率。
+   * 定时器 首次、末次延迟执行。
+   * @param {Function} cb 执行的的函数
+   * @param {number} delay 触发时间
+   */
+  // function throttle(cb, delay) {
+  //   let timer = null;
+  //   return function (...args) {
+  //     if (!timer) {
+  //       clearTimeout(timer);
+  //       timer = setTimeout(() => {
+  //         // 注意 this 指向 和参数
+  //         cb.apply(this, args);
+  //         clearTimeout(timer);
+  //         timer = null;
+  //       }, delay);
+  //     }
+  //   }
+  // }
+
+  /**
+   * 节流
+   * 高频时间触发,但n秒内只会执行一次,所以节流会稀释函数的执行频率。
+   * 时间戳和定时器结合。根据剩余时间执行。
+   * @param {Function} fn 
+   * @param {number} interval 
+   */
+  function throttle(fn, interval) {
+    let start = Date.now();
+    let timer = null;
+    return function () {
+      const now = Date.now();
+      clearTimeout(timer);console.log(timer)
+      // 剩余等待时间
+      const remaining = interval - (now - start);
+      if (remaining <= 0) {
+        // 剩余等待时间小于等于0，立即执行
+        start = now;
+        fn.apply(this, arguments);
+      } else {
+        // 还有剩余等待时间，使用 定时器 等待执行
+        timer = setTimeout(() => {
+          start = now;
+          fn.apply(this, arguments);
+        }, remaining);
+      }
+    }
+  }
+
+
+  function testThrottle(params) {
+    console.log(params)
+  }
+
+  document.addEventListener('scroll', throttle(testThrottle, 1000));
+</script>
+
+</html>

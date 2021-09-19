@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="./echarts-5.2.0/echarts.min.js"></script>
+</head>
+
+<body>
+  <div id="pie" style="width: 500px;height: 500px;margin: 0 auto"></div>
+
+</body>
+
+<script type="text/javascript">
+
+  const option = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {
+      top: '5%',
+      left: 'center'
+    },
+    series: [
+      {
+        name: '访问来源',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+        label: {
+          show: false,
+          position: 'center'
+        },
+        emphasis: {
+          label: {
+            show: true,
+            fontSize: '40',
+            fontWeight: 'bold'
+          }
+        },
+        labelLine: {
+          show: false
+        },
+        data: [
+          { value: 1048, name: '搜索引擎' },
+          { value: 735, name: '直接访问' },
+          { value: 580, name: '邮件营销' },
+          { value: 484, name: '联盟广告' },
+          { value: 300, name: '视频广告' }
+        ]
+      }
+    ]
+  };
+
+  let myChart = echarts.init(document.getElementById('pie'));
+  myChart.setOption(option);
+
+  let count = 0;
+  let timer = null;
+  timer = setInterval(() => {
+    console.log(count);
+    count++;
+    if (count > 10) {
+      clearInterval(timer)
+    }
+
+    myChart.dispatchAction({
+      type: 'downplay', // action: downplay 取消高亮指定的数据图形。
+    });
+    myChart.dispatchAction({
+      type: 'highlight', // action: highlight 高亮指定的数据图形。
+      dataIndex: count % option.series[0].data.length, // 这行不能省
+    });
+  }, 1000);
+</script>
+
+</html>
